@@ -92,11 +92,7 @@
                         return new Node\Expr\MethodCall(new Node\Expr\StaticCall(new Node\Name\FullyQualified('PHPSandbox\\PHPSandbox'), 'getSandbox', [new Node\Arg(new Node\Scalar\String_($this->sandbox->name))]), '_' . $name, [new Node\Arg(new Node\Expr\FuncCall(new Node\Name(['func_get_args'])))], $node->getAttributes());
                     }
                 } else {
-                    return new Node\Expr\Ternary(
-                        new Node\Expr\MethodCall(new Node\Expr\StaticCall(new Node\Name\FullyQualified('PHPSandbox\\PHPSandbox'), 'getSandbox', [new Node\Arg(new Node\Scalar\String_($this->sandbox->name))]), 'checkFunc', [new Node\Arg($node->name)], $node->getAttributes()),
-                        $node,
-                        new Node\Expr\ConstFetch(new Node\Name('null'))
-                    );
+                    $this->sandbox->validationError('Sandboxed code attempted to call potential concatenated function!', Error::DEFINE_FUNC_ERROR, $node);
                 }
             } else if($node instanceof Node\Stmt\Function_){
                 if(!$this->sandbox->allow_functions){
